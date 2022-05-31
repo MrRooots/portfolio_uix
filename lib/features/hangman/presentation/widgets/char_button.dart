@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:portfolio_uix/features/hangman/bloc/hangman/hangman_bloc.dart';
 import 'package:portfolio_uix/features/hangman/data/models/game_model.dart';
 
-import '../../../../core/data/alphabet.dart';
+import '../../../../core/data/hangman/data.dart';
 import 'word_button.dart';
 
 class CharacterButton extends StatelessWidget {

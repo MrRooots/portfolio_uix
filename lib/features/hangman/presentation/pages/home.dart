@@ -6,7 +6,6 @@ import 'package:portfolio_uix/service_locator.dart';
 import '../../../../core/widgets/default_button.dart';
 import '../../bloc/hangman/hangman_bloc.dart';
 import '../../bloc/scores_bloc/hangman_scores_bloc.dart';
-import '../../data/repositories/hangman_repository.dart';
 import 'game.dart';
 import 'scores.dart';
 

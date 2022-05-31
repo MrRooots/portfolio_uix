@@ -28,8 +28,9 @@ class GameModel extends Equatable {
   final int hintsCount;
 
   /// Available letters for hint
-  final List<String> hintLetters;
+  final List<String> hintCharacters;
 
+  /// List of already used characters
   final List<String> usedCharacters;
 
   /// Constructor
@@ -41,7 +42,7 @@ class GameModel extends Equatable {
     required final this.lives,
     required final this.wordsCount,
     required final this.hintsCount,
-    required final this.hintLetters,
+    required final this.hintCharacters,
     required final this.usedCharacters,
   });
 
@@ -60,8 +61,8 @@ class GameModel extends Equatable {
         lives: 5,
         wordsCount: wordsCount,
         hintsCount: 5,
-        hintLetters: Utils.stringToList(word),
-        usedCharacters: [],
+        hintCharacters: Utils.stringToList(word),
+        usedCharacters: <String>[],
       );
 
   GameModel copyWith({
@@ -72,7 +73,7 @@ class GameModel extends Equatable {
     final int? lives,
     final int? wordsCount,
     final int? hintsCount,
-    final List<String>? hintLetters,
+    final List<String>? hintCharacters,
     final List<String>? usedCharacters,
   }) {
     return GameModel(
@@ -83,7 +84,7 @@ class GameModel extends Equatable {
       lives: lives ?? this.lives,
       wordsCount: wordsCount ?? this.wordsCount,
       hintsCount: hintsCount ?? this.hintsCount,
-      hintLetters: hintLetters ?? this.hintLetters,
+      hintCharacters: hintCharacters ?? this.hintCharacters,
       usedCharacters: usedCharacters ?? this.usedCharacters,
     );
   }
@@ -96,7 +97,7 @@ class GameModel extends Equatable {
         'lives': lives,
         'wordsCount': wordsCount,
         'hintsCount': hintsCount,
-        'hintLetters': hintLetters,
+        'hintLetters': hintCharacters,
         'usedCharacters': usedCharacters
       };
 
@@ -116,15 +117,15 @@ class GameModel extends Equatable {
         lives: json['lives'],
         wordsCount: json['wordsCount'],
         hintsCount: json['hintsCount'],
-        hintLetters:
+        hintCharacters:
             (json['hintLetters'] as List).map((e) => e.toString()).toList(),
         usedCharacters:
             (json['usedCharacters'] as List).map((e) => e.toString()).toList(),
       );
 
-  /// Get random hint letter for current [word] and remove it from [hintLetters]
+  /// Get random hint letter for current [word] and remove it from [hintCharacters]
   String get hintCharacter =>
-      hintLetters.removeAt(Random().nextInt(hintLetters.length));
+      hintCharacters.removeAt(Random().nextInt(hintCharacters.length));
 
   /// Check if [word] is completely guessed
   bool get isWordGuessed => !hiddenWord.contains('_');
@@ -159,6 +160,6 @@ class GameModel extends Equatable {
         lives,
         wordsCount,
         hintsCount,
-        hintLetters,
+        hintCharacters,
       ];
 }

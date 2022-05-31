@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:convert' as convert;
 
 import 'package:http/http.dart' as http;
+import 'package:portfolio_uix/core/data/hangman/data.dart';
 import 'package:portfolio_uix/features/hangman/data/models/game_model.dart';
 import 'package:portfolio_uix/features/hangman/data/models/record_model.dart';
 import 'package:portfolio_uix/features/hangman/services/database.dart';
@@ -22,7 +23,9 @@ class HangmanRepository {
   /// Returns [getRandomWordFromCache] on any errors
   Future<String> getRandomWord() async {
     try {
-      final http.Response response = await http.post(Uri.parse(Constants.url));
+      final http.Response response = await http
+          .post(Uri.parse(Constants.url))
+          .timeout(const Duration(seconds: 5));
 
       final Map<String, dynamic> responseJson =
           convert.jsonDecode(convert.utf8.decode(response.bodyBytes));
@@ -33,20 +36,29 @@ class HangmanRepository {
 
       return word.length > 12 ? await getRandomWord() : word;
     } catch (_) {
+      print('Failed with: $_');
       return await getRandomWordFromCache();
     }
   }
 
-  /// Load random word from previously played words
-  /// If the cache is empty the default word will be returned
+  /// Load random word from the list of previously played words
+  /// If [storage] is empty the word from [HangmanWords] will be returned
   Future<String> getRandomWordFromCache() async {
-    final List<String>? words = storage.getStringList(Constants.cachedWords);
+    try {
+      final List<String>? words = storage.getStringList(Constants.cachedWords);
 
-    if (words != null && words.isNotEmpty) {
-      return words.elementAt(math.Random().nextInt(words.length));
+      if (words != null && words.isNotEmpty) {
+        return words.elementAt(math.Random().nextInt(words.length));
+      } else {
+        await storage.setStringList(Constants.cachedWords, HangmanWords.words);
+        return HangmanWords.words.elementAt(
+          math.Random().nextInt(HangmanWords.words.length),
+        );
+      }
+    } catch (error) {
+      print('[getRandomWordFromCache]: Failed to read: $error');
+      return 'пивоварня';
     }
-
-    return 'template';
   }
 
   /// Save currently played word to cache
@@ -58,7 +70,7 @@ class HangmanRepository {
       words.add(word);
       storage.setStringList(Constants.cachedWords, words);
     } catch (error) {
-      print('Failed to save with: $error');
+      print('[saveWordToCache]: Failed to save: $error');
     }
   }
 
@@ -70,7 +82,7 @@ class HangmanRepository {
         convert.jsonEncode(gameModel.toJson()),
       );
     } catch (error) {
-      print('Failed to save with: $error');
+      print('[saveCurrentState]: Failed to save: $error');
     }
   }
 
@@ -83,11 +95,10 @@ class HangmanRepository {
       final String? state = storage.getString(Constants.cachedState);
 
       if (state != null) {
-        print(convert.jsonDecode(state));
         gameModel = GameModel.fromJson(json: convert.jsonDecode(state));
       }
     } catch (error) {
-      print('Failed to load with: $error');
+      print('[loadLastState]: Failed to load: $error');
     }
 
     return gameModel;
@@ -97,13 +108,10 @@ class HangmanRepository {
   Future<GameModel> saveRecordToCache({
     required final GameModel gameModel,
   }) async {
-    print('Updating record of model with uuid: ${gameModel.uuid}');
     try {
-      print('Updating');
       await database.updateRecord(newGameModel: gameModel);
       return gameModel;
     } catch (_) {
-      print('Creating: $_');
       return await database.createRecord(gameModel: gameModel);
     }
   }
@@ -111,8 +119,8 @@ class HangmanRepository {
   Future<List<RecordModel>> loadRecords() async {
     try {
       return await database.readAllRecords();
-    } catch (_) {
-      print('Failed to load records: $_');
+    } catch (error) {
+      print('[loadRecords]: Failed to load records: $error');
       return [];
     }
   }

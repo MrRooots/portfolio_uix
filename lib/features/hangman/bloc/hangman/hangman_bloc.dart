@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/gestures.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:portfolio_uix/features/hangman/data/models/game_model.dart';
 import 'package:portfolio_uix/features/hangman/data/repositories/hangman_repository.dart';
 import 'package:portfolio_uix/features/hangman/services/database.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'hangman_event.dart';
 part 'hangman_state.dart';
@@ -17,6 +17,7 @@ part 'hangman_state.dart';
 
 class HangmanBloc extends Bloc<HangmanEvent, HangmanState> {
   final HangmanRepository repository;
+
   HangmanBloc({required final this.repository})
       : super(const HangmanInitial()) {
     on<HangmanInitialize>(_onHangmanInitialize);
@@ -46,7 +47,6 @@ class HangmanBloc extends Bloc<HangmanEvent, HangmanState> {
     }
 
     await repository.saveCurrentState(gameModel: gameModel);
-
     emit(HangmanLoaded(gameModel: gameModel));
   }
 

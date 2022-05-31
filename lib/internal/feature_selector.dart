@@ -24,11 +24,7 @@ class FeatureSelector extends StatelessWidget {
             DefaultButton(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (context) =>
-                        StartupBloc()..add(const StartupStarted()),
-                    child: const HangmanHomePage(),
-                  ),
+                  builder: (context) => const HangmanHomePage(),
                 ),
               ),
               text: 'Hangman Game',
