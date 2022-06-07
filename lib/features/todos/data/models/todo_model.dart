@@ -19,12 +19,16 @@ class TodoModelMapper {
 class TodoModel extends TodoEntity {
   /// Constructor
   const TodoModel({
+    required final int? id,
+    required final String uuid,
     required String title,
     required TodoType type,
     required TodoPriority priority,
     required DateTime createdAt,
     required bool isCompleted,
   }) : super(
+          id: id,
+          uuid: uuid,
           title: title,
           type: type,
           priority: priority,
@@ -35,6 +39,8 @@ class TodoModel extends TodoEntity {
   /// Create [TodoModel] from given [json] like object
   factory TodoModel.fromJson({required final Map<String, dynamic> json}) =>
       TodoModel(
+        id: json['id'],
+        uuid: json['uuid'],
         title: json['title'],
         type: TodoModelMapper.typeFromInt(json['type']),
         priority: TodoModelMapper.priorityFromInt(json['priority']),
@@ -53,6 +59,8 @@ class TodoModel extends TodoEntity {
 
   /// Copy current [TodoModel] with given values
   TodoModel copyWith({
+    final int? id,
+    final String? uuid,
     final String? title,
     final TodoType? type,
     final TodoPriority? priority,
@@ -60,6 +68,8 @@ class TodoModel extends TodoEntity {
     final bool? isCompleted,
   }) =>
       TodoModel(
+        id: id ?? this.id,
+        uuid: uuid ?? this.uuid,
         title: title ?? this.title,
         type: type ?? this.type,
         priority: priority ?? this.priority,

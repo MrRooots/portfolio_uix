@@ -1,0 +1,3 @@
+class CreateTodoUseCase {
+  const CreateTodoUseCase();
+}

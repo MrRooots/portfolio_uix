@@ -3,6 +3,10 @@ import 'package:equatable/equatable.dart';
 import '../../../../core/data/todos/data.dart';
 
 class TodoEntity extends Equatable {
+  final int? id;
+
+  final String uuid;
+
   /// [TodoEntity] title
   final String title;
 
@@ -20,6 +24,8 @@ class TodoEntity extends Equatable {
 
   /// Constructor
   const TodoEntity({
+    required this.id,
+    required final this.uuid,
     required final this.title,
     required final this.type,
     required final this.priority,
@@ -29,6 +35,8 @@ class TodoEntity extends Equatable {
 
   @override
   List<Object?> get props => [
+        id,
+        uuid,
         title,
         type,
         priority,

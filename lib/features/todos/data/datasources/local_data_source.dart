@@ -1,19 +1,25 @@
 import 'package:portfolio_uix/core/data/todos/data.dart';
 import 'package:portfolio_uix/features/todos/data/models/todo_model.dart';
 import 'package:portfolio_uix/features/todos/domain/entities/todo_entity.dart';
+import 'package:portfolio_uix/features/todos/domain/usecases/create_todo.dart';
+import 'package:portfolio_uix/features/todos/domain/usecases/delete_todo.dart';
+import 'package:portfolio_uix/features/todos/domain/usecases/read_all_todos.dart';
+import 'package:portfolio_uix/features/todos/domain/usecases/read_todo_by_id.dart';
+import 'package:portfolio_uix/features/todos/domain/usecases/update_todo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/services/database.dart';
 
 abstract class TodoLocalDataSource {
   /// Save given [todo] to local [TodoDatabase]
-  Future<void> saveToCache({required final TodoModel todo});
+  Future<TodoEntity> createTodo({required final TodoModel todo});
 
   /// Load all [TodoEntity] from local [TodoDatabase]
-  Future<List<TodoEntity>> loadAllTodos();
+  Future<List<TodoEntity>> readAllTodos();
 
   /// Load [TodoEntity] with given filters from local [TodoDatabase]
-  Future<List<TodoEntity>> loadTodosWhere({
+  Future<List<TodoEntity>> readTodosWhere({
+    final String? id,
     final String? title,
     final TodoType? type,
     final TodoPriority? priority,
@@ -28,29 +34,42 @@ class TodoLocalDataSourceImpl implements TodoLocalDataSource {
   /// Local [database] instance
   final TodoDatabase database;
 
+  final CreateTodoUseCase createTodoUseCase;
+  final ReadAllTodosUseCase readAllTodosUseCase;
+  final ReadTodosWhereUseCase readTodosWhereUseCase;
+  final UpdateTodoUseCase updateTodoUseCase;
+  final DeleteTodoUseCase deleteTodo;
+
   const TodoLocalDataSourceImpl({
     required final this.storage,
     required final this.database,
+    required final this.createTodoUseCase,
+    required final this.readAllTodosUseCase,
+    required final this.readTodosWhereUseCase,
+    required final this.updateTodoUseCase,
+    required final this.deleteTodo,
   });
 
   @override
-  Future<List<TodoEntity>> loadAllTodos() async {
+  Future<TodoEntity> createTodo({required TodoModel todo}) async {}
+
+  @override
+  Future<List<TodoEntity>> readAllTodos() async {
     final List<TodoEntity> todos = [];
 
     return todos;
   }
 
   @override
-  Future<List<TodoEntity>> loadTodosWhere(
-      {String? title,
-      TodoType? type,
-      TodoPriority? priority,
-      bool? isCompleted}) async {
+  Future<List<TodoEntity>> readTodosWhere({
+    final String? id,
+    final String? title,
+    final TodoType? type,
+    final TodoPriority? priority,
+    final bool? isCompleted,
+  }) async {
     final List<TodoEntity> todos = [];
 
     return todos;
   }
-
-  @override
-  Future<void> saveToCache({required TodoModel todo}) async {}
 }

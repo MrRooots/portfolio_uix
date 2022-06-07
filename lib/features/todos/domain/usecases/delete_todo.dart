@@ -1,0 +1,3 @@
+class DeleteTodoUseCase {
+  const DeleteTodoUseCase();
+}

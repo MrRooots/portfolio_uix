@@ -1,0 +1,3 @@
+class ReadAllTodosUseCase {
+  const ReadAllTodosUseCase();
+}

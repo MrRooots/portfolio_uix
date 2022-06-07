@@ -1,0 +1,3 @@
+class UpdateTodoUseCase {
+  const UpdateTodoUseCase();
+}
